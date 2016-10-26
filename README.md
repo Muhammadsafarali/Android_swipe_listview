@@ -1,4 +1,4 @@
-# Android_swipe_listview
+# Android Swipe ListView
 
 ##Источники вдохновения:
 
