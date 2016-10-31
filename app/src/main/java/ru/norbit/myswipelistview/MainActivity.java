@@ -1,11 +1,13 @@
 package ru.norbit.myswipelistview;
 
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -33,30 +35,38 @@ public class MainActivity extends AppCompatActivity {
             public void create(SwipeMenu menu) {
 
                 // create "open" item
-                SwipeMenuItem openItem = new SwipeMenuItem(
-                        getApplicationContext());
-                // set item background
-                openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
-                        0xCE)));
-                // set item width
-                openItem.setWidth(dp2px(90));
-                // set item title
-                openItem.setTitle("Open");
-                // set item title fontsize
-                openItem.setTitleSize(18);
-                // set item title font color
-                openItem.setTitleColor(Color.WHITE);
+//                SwipeMenuItem openItem = new SwipeMenuItem(
+//                        getApplicationContext());
+//                // set item background
+//                openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
+//                        0xCE)));
+//                // set item width
+//                openItem.setWidth(dp2px(90));
+//                // set item title
+//                openItem.setTitle("Open");
+//                // set item title fontsize
+//                openItem.setTitleSize(18);
+//                // set item title font color
+//                openItem.setTitleColor(Color.WHITE);
+
                 // add to menu
-                menu.addMenuItem(openItem);
+//                menu.addMenuItem(openItem);
 
                 // create "delete" item
                 SwipeMenuItem deleteItem = new SwipeMenuItem(
                         getApplicationContext());
+
+                Display display = getWindowManager().getDefaultDisplay();
+                Point size = new Point();
+                display.getSize(size);
+                int width = size.x;
+                deleteItem.setWidth(width);
+
                 // set item background
                 deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
                         0x3F, 0x25)));
                 // set item width
-                deleteItem.setWidth(dp2px(90));
+//                deleteItem.setWidth(dp2px(90));
                 // set a icon
                 deleteItem.setIcon(R.drawable.ic_delete);
                 // add to menu
@@ -66,21 +76,37 @@ public class MainActivity extends AppCompatActivity {
 
         listView.setMenuCreator(creator);
 
-        listView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+        listView.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
+
             @Override
-            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-                switch (index) {
-                    case 0:
-                        Log.e("LOG", "push open");
-                        break;
-                    case 1:
-                        Log.e("LOG", "push delete");
-                        break;
-                }
-                // false : close the menu; true : not close the menu
-                return false;
+            public void onSwipeStart(int position) {
+                // position - всегда номер строки в списке начиная с нуля.
+                Log.e("LOG", "Swipe start -> " + position);
+            }
+
+            @Override
+            public void onSwipeEnd(int position) {
+                // Если swipe не был доведен до конца, то position == -1
+                // Иначе position == номеру строки
+                Log.e("LOG", "stop -> " + position);
             }
         });
+
+//        listView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+//                switch (index) {
+//                    case 0:
+//                        Log.e("LOG", "push open");
+//                        break;
+//                    case 1:
+//                        Log.e("LOG", "push delete");
+//                        break;
+//                }
+//                // false : close the menu; true : not close the menu
+//                return false;
+//            }
+//        });
 
         listView.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
 
